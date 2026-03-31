@@ -1,7 +1,13 @@
 # CaseAdminApp 
 
-> Warning
-> This project is still a work in progress. Metadata, deployment steps, and app behavior may be broken and continue to change while development is ongoing.
+## 🚧 Project Status: Under Heavy Construction
+
+> ⚠️ **Heads up! This project is currently under active development.**
+
+Things you should know:
+- 🔥 Features may be incomplete or unstable  
+- 🧩 Metadata and configurations may change without notice  
+- 🚀 Deployment steps might not work (yet)
 
 ## Project Contents
 
