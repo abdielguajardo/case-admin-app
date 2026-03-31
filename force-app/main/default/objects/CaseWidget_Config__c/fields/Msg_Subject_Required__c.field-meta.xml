@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Msg_Subject_Required__c</fullName>
+    <defaultValue>&quot;Subject is required&quot;</defaultValue>
+    <label>Subject Required Message</label>
+    <length>255</length>
+    <required>true</required>
+    <type>Text</type>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Msg_Email_Invalid__c</fullName>
+    <defaultValue>&quot;Enter a valid email&quot;</defaultValue>
+    <label>Invalid Email Message</label>
+    <length>255</length>
+    <required>true</required>
+    <type>Text</type>
+</CustomField>

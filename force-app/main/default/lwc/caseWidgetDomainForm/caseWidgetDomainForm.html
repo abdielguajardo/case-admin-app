@@ -1,0 +1,258 @@
+<template>
+    <lightning-modal-header label={modalTitle}></lightning-modal-header>
+
+    <lightning-modal-body>
+        <div class="domain-form slds-p-around_medium">
+
+            <!-- Section 1: Domain Identity -->
+            <div class="slds-section slds-is-open slds-m-bottom_medium">
+                <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small slds-m-bottom_small">
+                    Domain Identity
+                </h3>
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Descriptive Name"
+                            value={domain.Name}
+                            onchange={handleChange}
+                            data-field="Name"
+                            data-obj="domain"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Domain"
+                            value={domain.Domain__c}
+                            onchange={handleChange}
+                            onblur={handleDomainBlur}
+                            data-field="Domain__c"
+                            data-obj="domain"
+                            required
+                            field-level-help="e.g. yourdomain.com (without https://)"
+                            message-when-pattern-mismatch="Enter a valid domain without https://, slashes, or spaces"
+                            pattern="^[a-zA-Z0-9][a-zA-Z0-9\-\.]+[a-zA-Z0-9]$"
+                        ></lightning-input>
+                        <template if:true={domainError}>
+                            <p class="slds-text-color_error slds-m-top_xx-small">{domainError}</p>
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            type="toggle"
+                            label="Active"
+                            checked={domain.Active__c}
+                            onchange={handleActiveToggle}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-textarea
+                            label="Internal Notes"
+                            value={domain.Notes__c}
+                            onchange={handleChange}
+                            data-field="Notes__c"
+                            data-obj="domain"
+                        ></lightning-textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: reCAPTCHA -->
+            <div class="slds-section slds-is-open slds-m-bottom_medium">
+                <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small slds-m-bottom_small">
+                    reCAPTCHA
+                </h3>
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input
+                            label="Site Key (public)"
+                            value={config.Recaptcha_Site_Key__c}
+                            onchange={handleChange}
+                            data-field="Recaptcha_Site_Key__c"
+                            data-obj="config"
+                            required
+                            field-level-help="This key is received by the component and is visible in the browser."
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="secret-key-wrapper">
+                            <lightning-input
+                                label="Secret Key (private)"
+                                type={secretKeyInputType}
+                                value={config.Recaptcha_Secret_Key__c}
+                                onchange={handleChange}
+                                data-field="Recaptcha_Secret_Key__c"
+                                data-obj="config"
+                                required={secretKeyRequired}
+                                placeholder={secretKeyPlaceholder}
+                                field-level-help="This key never leaves Salesforce."
+                            ></lightning-input>
+                            <lightning-button-icon
+                                class="secret-toggle"
+                                icon-name={secretKeyIcon}
+                                variant="bare"
+                                alternative-text="Toggle secret key visibility"
+                                title="Show/Hide"
+                                onclick={handleToggleSecretKey}
+                            ></lightning-button-icon>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            type="number"
+                            label="Minimum reCAPTCHA Score"
+                            value={config.Recaptcha_Min_Score__c}
+                            onchange={handleChange}
+                            data-field="Recaptcha_Min_Score__c"
+                            data-obj="config"
+                            required
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            field-level-help="Range: 0.00 to 1.00. Recommended: 0.50"
+                        ></lightning-input>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Modal Texts -->
+            <div class="slds-section slds-is-open slds-m-bottom_medium">
+                <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small slds-m-bottom_small">
+                    Modal Texts
+                </h3>
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Modal Title"
+                            value={config.Modal_Title__c}
+                            onchange={handleChange}
+                            data-field="Modal_Title__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-textarea
+                            label="Description / Instructions"
+                            value={config.Modal_Description__c}
+                            onchange={handleChange}
+                            data-field="Modal_Description__c"
+                            data-obj="config"
+                            required
+                            max-length="1000"
+                        ></lightning-textarea>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Loading Message"
+                            value={config.Loading_Message__c}
+                            onchange={handleChange}
+                            data-field="Loading_Message__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Success Message"
+                            value={config.Success_Message__c}
+                            onchange={handleChange}
+                            data-field="Success_Message__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            type="number"
+                            label="Seconds to Auto-Close"
+                            value={config.Auto_Close_Seconds__c}
+                            onchange={handleChange}
+                            data-field="Auto_Close_Seconds__c"
+                            data-obj="config"
+                            required
+                            min="1"
+                            max="60"
+                            step="1"
+                        ></lightning-input>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Validation Messages -->
+            <div class="slds-section slds-is-open slds-m-bottom_medium">
+                <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small slds-m-bottom_small">
+                    Validation Messages
+                </h3>
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Email Required"
+                            value={config.Msg_Email_Required__c}
+                            onchange={handleChange}
+                            data-field="Msg_Email_Required__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Invalid Email"
+                            value={config.Msg_Email_Invalid__c}
+                            onchange={handleChange}
+                            data-field="Msg_Email_Invalid__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Subject Required"
+                            value={config.Msg_Subject_Required__c}
+                            onchange={handleChange}
+                            data-field="Msg_Subject_Required__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            label="Description Required"
+                            value={config.Msg_Description_Required__c}
+                            onchange={handleChange}
+                            data-field="Msg_Description_Required__c"
+                            data-obj="config"
+                            required
+                        ></lightning-input>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Case Types -->
+            <div class="slds-section slds-is-open slds-m-bottom_medium">
+                <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small slds-m-bottom_small">
+                    Case Types
+                </h3>
+                <c-case-widget-case-type-editor
+                    case-types={caseTypes}
+                    oncasetypeschange={handleCaseTypesChange}
+                ></c-case-widget-case-type-editor>
+            </div>
+
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <lightning-button
+            label="Cancel"
+            onclick={handleCancel}
+        ></lightning-button>
+        <lightning-button
+            label="Save"
+            variant="brand"
+            class="slds-m-left_small"
+            onclick={handleSave}
+            disabled={isSaving}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

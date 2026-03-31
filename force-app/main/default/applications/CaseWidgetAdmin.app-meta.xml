@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>CaseWidgetAdmin</defaultLandingTab>
+    <description>Administration panel for the SF Case Widget component.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>true</isNavPersonalizationDisabled>
+    <label>Case Widget Admin</label>
+    <navType>Standard</navType>
+    <tabs>CaseWidgetAdmin</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

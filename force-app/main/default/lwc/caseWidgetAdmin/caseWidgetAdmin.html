@@ -1,0 +1,72 @@
+<template>
+    <lightning-card title="SF Case Widget — Administration" icon-name="utility:form">
+        <div slot="actions">
+            <lightning-button
+                label="New Domain"
+                icon-name="utility:add"
+                variant="brand"
+                onclick={handleNewDomain}
+            ></lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+
+            <!-- Loading state -->
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading domains..."
+                    size="medium"
+                ></lightning-spinner>
+            </template>
+
+            <!-- Error state -->
+            <template if:true={isError}>
+                <div class="error-state slds-align_absolute-center slds-p-around_large">
+                    <lightning-icon
+                        icon-name="utility:error"
+                        variant="error"
+                        size="medium"
+                        class="slds-m-bottom_small"
+                    ></lightning-icon>
+                    <p class="slds-text-color_error slds-m-bottom_small">{errorMessage}</p>
+                    <lightning-button
+                        label="Retry"
+                        icon-name="utility:refresh"
+                        onclick={loadDomains}
+                    ></lightning-button>
+                </div>
+            </template>
+
+            <!-- Empty state -->
+            <template if:true={isEmpty}>
+                <div class="empty-state slds-align_absolute-center slds-p-around_large">
+                    <lightning-icon
+                        icon-name="utility:add"
+                        size="large"
+                        class="slds-m-bottom_small"
+                    ></lightning-icon>
+                    <h3 class="slds-text-heading_medium slds-m-bottom_small">No domains configured</h3>
+                    <p class="slds-text-color_weak slds-m-bottom_medium">
+                        Add your first domain to start configuring the Case Widget.
+                    </p>
+                    <lightning-button
+                        label="Add your first domain"
+                        variant="brand"
+                        onclick={handleNewDomain}
+                    ></lightning-button>
+                </div>
+            </template>
+
+            <!-- List state -->
+            <template if:true={isList}>
+                <c-case-widget-domain-list
+                    raw-domains={domains}
+                    oneditdomain={handleEditDomain}
+                    ondomainupdated={loadDomains}
+                    ondomaindeleted={loadDomains}
+                ></c-case-widget-domain-list>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,45 @@
+.case-type-editor {
+    padding: 0.5rem 0;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.type-row {
+    cursor: default;
+    user-select: none;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+}
+
+.type-row[draggable='true']:hover {
+    background: #f3f3f3;
+}
+
+.drag-handle {
+    cursor: grab;
+    font-size: 1.25rem;
+    color: #706e6b;
+    padding: 0 0.5rem;
+}
+
+.editable-text {
+    cursor: pointer;
+    border-bottom: 1px dashed #c9c9c9;
+    padding: 0 2px;
+}
+
+.editable-text:hover {
+    border-bottom-color: #0176d3;
+    color: #0176d3;
+}
+
+.add-form {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 4px;
+}

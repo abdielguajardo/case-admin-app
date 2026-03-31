@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Grants access to the Case Widget Administration panel and all related objects.</description>
+    <label>Case Widget Admin</label>
+
+    <applicationVisibilities>
+        <application>CaseWidgetAdmin</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+
+    <!-- Apex class access -->
+    <classAccesses>
+        <apexClass>CaseWidgetDomainService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <!-- CaseWidget_Domain__c -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>CaseWidget_Domain__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
+    <!-- CaseWidget_Config__c -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>CaseWidget_Config__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
+    <!-- CaseWidget_CaseType__c -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>CaseWidget_CaseType__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
+    <tabSettings>
+        <tab>CaseWidgetAdmin</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+</PermissionSet>

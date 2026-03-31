@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Domain Configuration page for the Case Widget Admin app.</description>
+    <masterLabel>Case Widget Admin</masterLabel>
+    <template>
+        <name>flexipage:defaultAppHomeTemplate</name>
+    </template>
+    <type>AppPage</type>
+    <flexiPageRegions>
+        <name>main</name>
+        <type>Region</type>
+        <itemInstances>
+            <componentInstance>
+                <identifier>caseWidgetAdmin</identifier>
+                <componentName>c:caseWidgetAdmin</componentName>
+            </componentInstance>
+        </itemInstances>
+    </flexiPageRegions>
+</FlexiPage>

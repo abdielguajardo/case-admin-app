@@ -1,0 +1,28 @@
+.domain-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.slds-section__title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.0625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+}
+
+.secret-key-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.secret-key-wrapper lightning-input {
+    flex: 1;
+}
+
+.secret-toggle {
+    margin-bottom: 0.25rem;
+}

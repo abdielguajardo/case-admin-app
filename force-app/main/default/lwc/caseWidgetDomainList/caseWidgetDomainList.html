@@ -1,0 +1,61 @@
+<template>
+    <div class="domain-list">
+        <template for:each={domains} for:item="wrapper">
+            <div key={wrapper.domain.Id} class="domain-card slds-box slds-m-bottom_small">
+                <div class="slds-grid slds-gutters slds-align_absolute-center">
+
+                    <!-- Active indicator dot -->
+                    <div class="slds-col slds-shrink">
+                        <span
+                            class={wrapper.activeDotClass}
+                            title={wrapper.activeLabel}
+                        ></span>
+                    </div>
+
+                    <!-- Domain info -->
+                    <div class="slds-col">
+                        <div class="slds-text-heading_small">{wrapper.domain.Name}</div>
+                        <div class="slds-text-color_weak slds-text-body_small">
+                            {wrapper.domain.Domain__c}
+                        </div>
+                        <div class="slds-text-body_small slds-m-top_xx-small">
+                            Created: {wrapper.createdDateFormatted}
+                            &nbsp;·&nbsp;
+                            Case types: {wrapper.caseTypeCount}
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="slds-col slds-shrink domain-actions">
+                        <lightning-button
+                            label="Edit"
+                            icon-name="utility:edit"
+                            data-domain-id={wrapper.domain.Id}
+                            onclick={handleEdit}
+                        ></lightning-button>
+
+                        <lightning-button
+                            label={wrapper.toggleLabel}
+                            icon-name={wrapper.toggleIcon}
+                            class="slds-m-left_x-small"
+                            data-domain-id={wrapper.domain.Id}
+                            data-active={wrapper.domain.Active__c}
+                            onclick={handleToggleActive}
+                        ></lightning-button>
+
+                        <lightning-button
+                            label="Delete"
+                            icon-name="utility:delete"
+                            variant="destructive-text"
+                            class="slds-m-left_x-small"
+                            data-domain-id={wrapper.domain.Id}
+                            disabled={wrapper.hasRecentActivity}
+                            title={wrapper.deleteTitle}
+                            onclick={handleDelete}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

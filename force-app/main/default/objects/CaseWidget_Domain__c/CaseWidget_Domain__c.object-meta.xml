@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <label>Case Widget Domain</label>
+    <nameField>
+        <label>Domain Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Case Widget Domains</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

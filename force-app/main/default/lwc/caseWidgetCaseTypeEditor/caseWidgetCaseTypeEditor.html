@@ -1,0 +1,147 @@
+<template>
+    <div class="case-type-editor">
+        <div class="editor-header">
+            <span class="slds-text-heading_small">Case Types</span>
+            <lightning-button
+                label="Add Type"
+                icon-name="utility:add"
+                onclick={handleShowAddForm}
+            ></lightning-button>
+        </div>
+
+        <template if:true={showAddForm}>
+            <div class="add-form slds-box slds-m-top_small">
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input
+                            label="Internal Value"
+                            placeholder="e.g. Bug"
+                            value={newValue}
+                            onchange={handleNewValueChange}
+                            required
+                            data-id="new-value"
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input
+                            label="Visible Label"
+                            placeholder="e.g. Report a bug"
+                            value={newLabel}
+                            onchange={handleNewLabelChange}
+                            required
+                            data-id="new-label"
+                        ></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-m-top_small">
+                    <lightning-button
+                        label="Add"
+                        variant="brand"
+                        onclick={handleAdd}
+                    ></lightning-button>
+                    <lightning-button
+                        label="Cancel"
+                        class="slds-m-left_x-small"
+                        onclick={handleCancelAdd}
+                    ></lightning-button>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={hasTypes}>
+            <div class="type-list slds-m-top_small">
+                <template for:each={_types} for:item="ct" for:index="idx">
+                    <div
+                        key={ct._key}
+                        class="type-row slds-box slds-m-top_xx-small"
+                        draggable="true"
+                        data-index={idx}
+                        ondragstart={handleDragStart}
+                        ondragover={handleDragOver}
+                        ondrop={handleDrop}
+                    >
+                        <div class="slds-grid slds-gutters slds-align_absolute-center">
+                            <div class="slds-col slds-shrink drag-handle" title="Drag to reorder">
+                                &#8597;
+                            </div>
+
+                            <template if:false={ct._editing}>
+                                <div class="slds-col slds-size_2-of-12">
+                                    <span
+                                        class="editable-text"
+                                        data-index={idx}
+                                        data-field="Value__c"
+                                        onclick={handleStartEdit}
+                                        title="Click to edit"
+                                    >{ct.Value__c}</span>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <span
+                                        class="editable-text"
+                                        data-index={idx}
+                                        data-field="Label__c"
+                                        onclick={handleStartEdit}
+                                        title="Click to edit"
+                                    >{ct.Label__c}</span>
+                                </div>
+                            </template>
+
+                            <template if:true={ct._editing}>
+                                <div class="slds-col slds-size_2-of-12">
+                                    <lightning-input
+                                        label="Value"
+                                        variant="label-hidden"
+                                        value={ct.Value__c}
+                                        data-index={idx}
+                                        data-field="Value__c"
+                                        onblur={handleEditBlur}
+                                        onchange={handleEditChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        label="Label"
+                                        variant="label-hidden"
+                                        value={ct.Label__c}
+                                        data-index={idx}
+                                        data-field="Label__c"
+                                        onblur={handleEditBlur}
+                                        onchange={handleEditChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+
+                            <div class="slds-col slds-shrink">
+                                <lightning-input
+                                    type="toggle"
+                                    label="Active"
+                                    checked={ct.Active__c}
+                                    data-index={idx}
+                                    onchange={handleToggleActive}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-shrink">
+                                <lightning-button-icon
+                                    icon-name="utility:delete"
+                                    variant="bare"
+                                    alternative-text="Delete"
+                                    title="Delete"
+                                    data-index={idx}
+                                    onclick={handleDelete}
+                                ></lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:false={hasTypes}>
+            <p class="slds-text-color_weak slds-m-top_small">No case types configured. Add at least one.</p>
+        </template>
+
+        <template if:true={validationError}>
+            <p class="slds-text-color_error slds-m-top_small">{validationError}</p>
+        </template>
+    </div>
+</template>
