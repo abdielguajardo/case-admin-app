@@ -1,9 +1,6 @@
-# CaseAdminApp
+# CaseAdminApp 
 
 Salesforce DX project for administering Case Widget domain configuration in Lightning Experience.
-
-> Warning
-> This project is still a work in progress. Metadata, deployment steps, and app behavior may continue to change while development is ongoing.
 
 ## Project Contents
 
