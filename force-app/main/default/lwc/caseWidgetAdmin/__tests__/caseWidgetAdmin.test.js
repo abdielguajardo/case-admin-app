@@ -83,7 +83,7 @@ describe('caseWidgetAdmin', () => {
         await Promise.resolve();
         await Promise.resolve();
 
-        const newBtn = el.shadowRoot.querySelector('lightning-button[label="New Domain"]');
+        const newBtn = el.shadowRoot.querySelector('lightning-button[data-testid="new-domain-button"]');
         newBtn.dispatchEvent(new CustomEvent('click'));
 
         await Promise.resolve();

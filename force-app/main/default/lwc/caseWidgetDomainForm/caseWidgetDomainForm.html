@@ -245,12 +245,14 @@
     <lightning-modal-footer>
         <lightning-button
             label="Cancel"
+            data-testid="cancel-button"
             onclick={handleCancel}
         ></lightning-button>
         <lightning-button
             label="Save"
             variant="brand"
             class="slds-m-left_small"
+            data-testid="save-button"
             onclick={handleSave}
             disabled={isSaving}
         ></lightning-button>

@@ -5,6 +5,7 @@
                 label="New Domain"
                 icon-name="utility:add"
                 variant="brand"
+                data-testid="new-domain-button"
                 onclick={handleNewDomain}
             ></lightning-button>
         </div>
@@ -32,6 +33,7 @@
                     <lightning-button
                         label="Retry"
                         icon-name="utility:refresh"
+                        data-testid="retry-button"
                         onclick={loadDomains}
                     ></lightning-button>
                 </div>
@@ -52,6 +54,7 @@
                     <lightning-button
                         label="Add your first domain"
                         variant="brand"
+                        data-testid="empty-state-add-button"
                         onclick={handleNewDomain}
                     ></lightning-button>
                 </div>

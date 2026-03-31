@@ -4,6 +4,27 @@ import saveDomain from '@salesforce/apex/CaseWidgetDomainService.saveDomain';
 import validateDomainUniqueness from '@salesforce/apex/CaseWidgetDomainService.validateDomainUniqueness';
 
 jest.mock(
+    'lightning/modal',
+    () => {
+        const { LightningElement } = require('lwc');
+
+        class LightningModal extends LightningElement {
+            close(result) {
+                this.closeValue = result;
+            }
+        }
+
+        LightningModal.open = jest.fn();
+
+        return {
+            __esModule: true,
+            default: LightningModal
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
     '@salesforce/apex/CaseWidgetDomainService.saveDomain',
     () => ({ default: jest.fn() }),
     { virtual: true }
@@ -92,7 +113,7 @@ describe('caseWidgetDomainForm', () => {
             jest.spyOn(input, 'reportValidity').mockReturnValue(true);
         });
 
-        const saveBtn = el.shadowRoot.querySelector('lightning-button[label="Save"]');
+        const saveBtn = el.shadowRoot.querySelector('lightning-button[data-testid="save-button"]');
         saveBtn.dispatchEvent(new CustomEvent('click'));
 
         await Promise.resolve();

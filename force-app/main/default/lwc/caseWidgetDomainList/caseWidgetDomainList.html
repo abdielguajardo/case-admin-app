@@ -30,6 +30,7 @@
                         <lightning-button
                             label="Edit"
                             icon-name="utility:edit"
+                            data-testid="edit-button"
                             data-domain-id={wrapper.domain.Id}
                             onclick={handleEdit}
                         ></lightning-button>
@@ -38,6 +39,7 @@
                             label={wrapper.toggleLabel}
                             icon-name={wrapper.toggleIcon}
                             class="slds-m-left_x-small"
+                            data-testid="toggle-active-button"
                             data-domain-id={wrapper.domain.Id}
                             data-active={wrapper.domain.Active__c}
                             onclick={handleToggleActive}
@@ -48,6 +50,7 @@
                             icon-name="utility:delete"
                             variant="destructive-text"
                             class="slds-m-left_x-small"
+                            data-testid="delete-button"
                             data-domain-id={wrapper.domain.Id}
                             disabled={wrapper.hasRecentActivity}
                             title={wrapper.deleteTitle}

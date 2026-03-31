@@ -69,11 +69,13 @@ describe('caseWidgetDomainList', () => {
         const handler = jest.fn();
         el.addEventListener('editdomain', handler);
 
-        return Promise.resolve().then(() => {
-            const editBtn = el.shadowRoot.querySelector('lightning-button[label="Edit"]');
+        return Promise.resolve()
+        .then(() => {
+            const editBtn = el.shadowRoot.querySelector('lightning-button[data-testid="edit-button"]');
             editBtn.dispatchEvent(new CustomEvent('click'));
             return Promise.resolve();
-        }).then(() => {
+        })
+        .then(() => {
             expect(handler).toHaveBeenCalled();
             expect(handler.mock.calls[0][0].detail.domainId).toBe('a01');
         });
@@ -86,7 +88,7 @@ describe('caseWidgetDomainList', () => {
         document.body.appendChild(el);
 
         await Promise.resolve();
-        const toggleBtn = el.shadowRoot.querySelector('lightning-button[label="Deactivate"]');
+        const toggleBtn = el.shadowRoot.querySelector('lightning-button[data-testid="toggle-active-button"]');
         toggleBtn.dispatchEvent(new CustomEvent('click'));
 
         await Promise.resolve();
@@ -100,7 +102,7 @@ describe('caseWidgetDomainList', () => {
         document.body.appendChild(el);
 
         return Promise.resolve().then(() => {
-            const deleteBtn = el.shadowRoot.querySelector('lightning-button[label="Delete"]');
+            const deleteBtn = el.shadowRoot.querySelector('lightning-button[data-testid="delete-button"]');
             expect(deleteBtn.disabled).toBe(true);
         });
     });
