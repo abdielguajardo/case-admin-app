@@ -1,18 +1,172 @@
-# Salesforce DX Project: Next Steps
+# CaseAdminApp
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+Salesforce DX project for administering Case Widget domain configuration in Lightning Experience.
 
-## How Do You Plan to Deploy Your Changes?
+> Warning
+> This project is still a work in progress. Metadata, deployment steps, and app behavior may continue to change while development is ongoing.
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+## Project Contents
 
-## Configure Your Salesforce DX Project
+This project includes:
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+- custom objects for domain, config, and case type management
+- Apex service logic for loading and saving Case Widget configuration
+- Lightning Web Components for the admin UI
+- a Lightning app, FlexiPage, and custom tab for accessing the admin experience
 
-## Read All About It
+Main metadata:
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+- [`force-app/main/default/objects`](./force-app/main/default/objects)
+- [`force-app/main/default/classes`](./force-app/main/default/classes)
+- [`force-app/main/default/lwc`](./force-app/main/default/lwc)
+- [`force-app/main/default/flexipages/CaseWidgetAdmin.flexipage-meta.xml`](./force-app/main/default/flexipages/CaseWidgetAdmin.flexipage-meta.xml)
+- [`force-app/main/default/tabs/CaseWidgetAdmin.tab-meta.xml`](./force-app/main/default/tabs/CaseWidgetAdmin.tab-meta.xml)
+- [`force-app/main/default/applications/CaseWidgetAdmin.app-meta.xml`](./force-app/main/default/applications/CaseWidgetAdmin.app-meta.xml)
+
+## Prerequisites
+
+- Salesforce CLI (`sf`)
+- Node.js and npm
+- access to a Salesforce org where you can deploy metadata
+
+## Salesforce DX Project Setup
+
+Project configuration is defined in [`sfdx-project.json`](./sfdx-project.json).
+
+Install local dependencies:
+
+```bash
+npm install
+```
+
+## Deploy to an Org
+
+If the target org does not already contain this metadata, deploy in dependency order:
+
+```bash
+sf project deploy start --source-dir force-app/main/default/objects
+sf project deploy start --source-dir force-app/main/default/classes
+sf project deploy start --source-dir force-app/main/default/lwc
+sf project deploy start --source-dir force-app/main/default/flexipages
+sf project deploy start --source-dir force-app/main/default/tabs
+sf project deploy start --source-dir force-app/main/default/applications
+sf project deploy start --source-dir force-app/main/default/permissionsets
+```
+
+After the org is aligned, you can also deploy the full package directory:
+
+```bash
+sf project deploy start --source-dir force-app/main/default
+```
+
+## Scratch Org Workflow
+
+Scratch org definition file:
+
+- [`config/project-scratch-def.json`](./config/project-scratch-def.json)
+
+Example flow:
+
+```bash
+sf org create scratch --definition-file config/project-scratch-def.json --alias case-widget-dev --set-default --duration-days 7
+sf project deploy start --source-dir force-app/main/default
+sf org open
+```
+
+## Assign Access
+
+This project includes the permission set:
+
+- [`force-app/main/default/permissionsets/CaseWidgetAdmin.permissionset-meta.xml`](./force-app/main/default/permissionsets/CaseWidgetAdmin.permissionset-meta.xml)
+
+Assign it after deployment if needed:
+
+```bash
+sf org assign permset --name CaseWidgetAdmin
+```
+
+You can also grant access through the Salesforce UI using profiles or permission sets.
+
+## Open the App
+
+After deployment:
+
+1. Open App Launcher
+2. Search for `Case Widget Admin`
+3. Open the app
+
+If the app navigation does not show the expected page, verify in `App Manager` that:
+
+- the `CaseWidgetAdmin` tab is included in navigation items
+- the app is visible to the intended users
+
+## Run Tests
+
+Run LWC unit tests:
+
+```bash
+npm test
+```
+
+Watch mode:
+
+```bash
+npm run test:unit:watch
+```
+
+Run coverage:
+
+```bash
+npm run test:unit:coverage
+```
+
+Relevant test files:
+
+- [`force-app/main/default/classes/CaseWidgetDomainServiceTest.cls`](./force-app/main/default/classes/CaseWidgetDomainServiceTest.cls)
+- [`force-app/main/default/lwc/caseWidgetAdmin/__tests__/caseWidgetAdmin.test.js`](./force-app/main/default/lwc/caseWidgetAdmin/__tests__/caseWidgetAdmin.test.js)
+- [`force-app/main/default/lwc/caseWidgetDomainForm/__tests__/caseWidgetDomainForm.test.js`](./force-app/main/default/lwc/caseWidgetDomainForm/__tests__/caseWidgetDomainForm.test.js)
+- [`force-app/main/default/lwc/caseWidgetDomainList/__tests__/caseWidgetDomainList.test.js`](./force-app/main/default/lwc/caseWidgetDomainList/__tests__/caseWidgetDomainList.test.js)
+- [`force-app/main/default/lwc/caseWidgetCaseTypeEditor/__tests__/caseWidgetCaseTypeEditor.test.js`](./force-app/main/default/lwc/caseWidgetCaseTypeEditor/__tests__/caseWidgetCaseTypeEditor.test.js)
+
+## Lint and Format
+
+Lint:
+
+```bash
+npm run lint
+```
+
+Format:
+
+```bash
+npm run prettier
+```
+
+Verify formatting:
+
+```bash
+npm run prettier:verify
+```
+
+## Notes
+
+- The main admin UI component is [`caseWidgetAdmin`](./force-app/main/default/lwc/caseWidgetAdmin).
+- Server-side logic is implemented in [`CaseWidgetDomainService.cls`](./force-app/main/default/classes/CaseWidgetDomainService.cls).
+- The current Apex service does not use `WITH SECURITY_ENFORCED`. This was done to simplify admin-page access during setup and deployment. Restrict app access to trusted users.
+
+## Troubleshooting
+
+Common issues:
+
+- `Invalid type` errors in Apex
+  - deploy custom objects before classes
+- app opens but shows generic Home
+  - verify app navigation items and tab visibility in the org UI
+- admin page loads but data does not render
+  - verify Apex, objects, and LWC metadata all deployed successfully
+- permission set deployment errors on required fields
+  - adjust permission metadata or use org UI assignment for access
+
+## API Version
+
+This project uses source API version `66.0`.
