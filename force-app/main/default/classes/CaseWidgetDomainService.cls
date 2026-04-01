@@ -28,7 +28,7 @@ public with sharing class CaseWidgetDomainService {
               Msg_Email_Invalid__c,
               Msg_Subject_Required__c,
               Msg_Description_Required__c
-            FROM Config__r
+            FROM Configs__r
           ),
           (
             SELECT Id, Domain__c, Value__c, Label__c, Sort_Order__c, Active__c
@@ -51,8 +51,8 @@ public with sharing class CaseWidgetDomainService {
         wrapper.put('domain', domain);
         wrapper.put('caseTypes', domain.CaseTypes__r);
 
-        if (domain.Config__r != null && !domain.Config__r.isEmpty()) {
-          CaseWidget_Config__c config = domain.Config__r[0];
+        if (domain.Configs__r != null && !domain.Configs__r.isEmpty()) {
+          CaseWidget_Config__c config = domain.Configs__r[0];
           wrapper.put('config', config);
           wrapper.put(
             'hasSecretKey',
@@ -98,7 +98,7 @@ public with sharing class CaseWidgetDomainService {
   @AuraEnabled(cacheable=true)
   public static Boolean validateDomainUniqueness(String domain, Id domainId) {
     try {
-      String cleanDomain = domain == null ? null : domain.trim().toLowerCase();
+      String cleanDomain = CaseWidgetOriginUtil.normalizeOrigin(domain);
       Integer count;
       if (domainId == null) {
         count = [
@@ -155,17 +155,16 @@ public with sharing class CaseWidgetDomainService {
         configData,
         domainRecord.Id
       );
-      if (
-        configRecord.Id != null &&
-        String.isBlank(configRecord.Recaptcha_Secret_Key__c)
-      ) {
-        CaseWidget_Config__c existing = [
-          SELECT Recaptcha_Secret_Key__c
+      if (configRecord.Id == null) {
+        List<CaseWidget_Config__c> existingConfigs = [
+          SELECT Id
           FROM CaseWidget_Config__c
-          WHERE Id = :configRecord.Id
+          WHERE Domain__c = :domainRecord.Id
           LIMIT 1
         ];
-        configRecord.Recaptcha_Secret_Key__c = existing.Recaptcha_Secret_Key__c;
+        if (!existingConfigs.isEmpty()) {
+          configRecord.Id = existingConfigs[0].Id;
+        }
       }
       upsert configRecord;
 
@@ -235,9 +234,7 @@ public with sharing class CaseWidgetDomainService {
     }
     domainRecord.Name = (String) domainData.get('Name');
     String domainValue = (String) domainData.get('Domain__c');
-    domainRecord.Domain__c = domainValue == null
-      ? null
-      : domainValue.trim().toLowerCase();
+    domainRecord.Domain__c = CaseWidgetOriginUtil.normalizeOrigin(domainValue);
     domainRecord.Active__c = (Boolean) domainData.get('Active__c');
     domainRecord.Notes__c = (String) domainData.get('Notes__c');
     return domainRecord;
@@ -255,9 +252,10 @@ public with sharing class CaseWidgetDomainService {
     configRecord.Recaptcha_Site_Key__c = (String) configData.get(
       'Recaptcha_Site_Key__c'
     );
-    configRecord.Recaptcha_Secret_Key__c = (String) configData.get(
-      'Recaptcha_Secret_Key__c'
-    );
+    String secretKey = (String) configData.get('Recaptcha_Secret_Key__c');
+    if (configRecord.Id == null || String.isNotBlank(secretKey)) {
+      configRecord.Recaptcha_Secret_Key__c = secretKey;
+    }
     configRecord.Modal_Title__c = (String) configData.get('Modal_Title__c');
     configRecord.Modal_Description__c = (String) configData.get(
       'Modal_Description__c'
@@ -367,7 +365,7 @@ public with sharing class CaseWidgetDomainService {
         'SELECT ' +
           CASE_DOMAIN_FIELD +
           ' domainId FROM Case' +
-        ' WHERE ' +
+          ' WHERE ' +
           CASE_DOMAIN_FIELD +
           ' IN :domainIds' +
           ' AND CreatedDate = LAST_N_DAYS:30' +

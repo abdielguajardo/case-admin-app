@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Grants access to the Case Widget Administration panel and all related objects.</description>
+    <description
+  >Grants access to the Case Widget Administration panel and all related objects.</description>
     <label>Case Widget Admin</label>
 
     <applicationVisibilities>
@@ -9,6 +10,11 @@
     </applicationVisibilities>
 
     <!-- Apex class access -->
+    <classAccesses>
+        <apexClass>CaseWidgetConfigController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
     <classAccesses>
         <apexClass>CaseWidgetDomainService</apexClass>
         <enabled>true</enabled>
